@@ -2,10 +2,26 @@
 
 {% block content %}
 
-
+<div class='column'>
+    <div>
+        {% if user.is_authenticated %}
+            <a href="{% url 'TweetWiz:logout' %}">Logout</a>
+        {% else %}
+            <a href="{% url 'TweetWiz:login' %}">Login</a>
+        {% endif %}
+    </div>
+</div>
+{% if not user.is_authenticated %}
+<div class="column">
+    <div class="box">
+        <span class="is-small has-text-grey-light">
+            Please Log in here
+        </span>
+    </div>
+</div>
+{% else %}
 <div class="column">
     {% for tweet in tweets %}
-       
         <div class="box">
             {{ tweet.body }}
             <span class="is-small has-text-grey-light">
@@ -14,8 +30,6 @@
         </div>
     {% endfor %}
 </div>
-
-
 <div class="block">
     <div class="block">
         <h2 class="title is-2">Add a Dweet</p>
@@ -30,6 +44,6 @@
         </form>
     </div>
 </div>
-
+{% endif %}
 
 {% endblock content %}

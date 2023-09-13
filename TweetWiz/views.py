@@ -3,20 +3,22 @@ from .models import Tweet, Profile
 from .forms import TweetForm
 
 # Create your views here.
-def dashboard(request):
-    form = TweetForm(request.POST or None)
-    if request.method == "POST":
-        if form.is_valid():
-            tweet = form.save(commit=False)
-            tweet.user = request.user
-            tweet.save()
-            return redirect("TweetWiz:dashboard")
-    followed_tweets = Tweet.objects.filter(
-        user__profile__in = request.user.profile.follows.all()
-    ).order_by("-created_at")
-    
-    return render(request, "TweetWiz/dashboard.html", {"form": form, "tweets":followed_tweets})
-
+def home(request):
+    if request.user.is_authenticated:
+        form = TweetForm(request.POST or None)
+        if request.method == "POST":
+            if form.is_valid():
+                tweet = form.save(commit=False)
+                tweet.user = request.user
+                tweet.save()
+                return redirect("TweetWiz:home")
+        followed_tweets = Tweet.objects.filter(
+            user__profile__in = request.user.profile.follows.all()
+        ).order_by("-created_at")
+        
+        return render(request, "TweetWiz/dashboard.html", {"form": form, "tweets":followed_tweets})
+    else:
+        return render(request, "TweetWiz/dashboard.html")
 
 def profile_list(request):
     profiles = Profile.objects.exclude(user=request.user)
