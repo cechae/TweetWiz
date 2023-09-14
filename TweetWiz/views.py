@@ -1,22 +1,25 @@
 from django.shortcuts import render, redirect
 from .models import Tweet, Profile
-from .forms import TweetForm
-
+from .forms import TweetForm, CustomUserCreationForm
+from django.contrib.auth import login
+from django.urls import reverse
 # Create your views here.
-def dashboard(request):
-    form = TweetForm(request.POST or None)
-    if request.method == "POST":
-        if form.is_valid():
-            tweet = form.save(commit=False)
-            tweet.user = request.user
-            tweet.save()
-            return redirect("TweetWiz:dashboard")
-    followed_tweets = Tweet.objects.filter(
-        user__profile__in = request.user.profile.follows.all()
-    ).order_by("-created_at")
-    
-    return render(request, "TweetWiz/dashboard.html", {"form": form, "tweets":followed_tweets})
-
+def home(request):
+    if request.user.is_authenticated:
+        form = TweetForm(request.POST or None)
+        if request.method == "POST":
+            if form.is_valid():
+                tweet = form.save(commit=False)
+                tweet.user = request.user
+                tweet.save()
+                return redirect("TweetWiz:home")
+        followed_tweets = Tweet.objects.filter(
+            user__profile__in = request.user.profile.follows.all()
+        ).order_by("-created_at")
+        
+        return render(request, "TweetWiz/dashboard.html", {"form": form, "tweets":followed_tweets})
+    else:
+        return render(request, "TweetWiz/dashboard.html")
 
 def profile_list(request):
     profiles = Profile.objects.exclude(user=request.user)
@@ -42,3 +45,18 @@ def profile(request, pk):
         curr_user_profile.save()
     return render(request, "TweetWiz/profile.html", {"profile":profile})
 
+def register(request):
+    if request.method == "GET":
+        return render(
+            request,
+            "TweetWiz/register.html",
+            {"form": CustomUserCreationForm}
+        )
+    elif request.method == "POST":
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            newprofile = Profile(user=user)
+            newprofile.save()
+            login(request, user)
+            return redirect(reverse("TweetWiz:login"))
