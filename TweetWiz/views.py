@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
 from .models import Tweet, Profile
-from .forms import TweetForm
-
+from .forms import TweetForm, CustomUserCreationForm
+from django.contrib.auth import login
+from django.urls import reverse
 # Create your views here.
 def home(request):
     if request.user.is_authenticated:
@@ -44,3 +45,18 @@ def profile(request, pk):
         curr_user_profile.save()
     return render(request, "TweetWiz/profile.html", {"profile":profile})
 
+def register(request):
+    if request.method == "GET":
+        return render(
+            request,
+            "TweetWiz/register.html",
+            {"form": CustomUserCreationForm}
+        )
+    elif request.method == "POST":
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            newprofile = Profile(user=user)
+            newprofile.save()
+            login(request, user)
+            return redirect(reverse("TweetWiz:login"))
