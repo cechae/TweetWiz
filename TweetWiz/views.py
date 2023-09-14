@@ -56,7 +56,5 @@ def register(request):
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            newprofile = Profile(user=user)
-            newprofile.save()
             login(request, user)
             return redirect(reverse("TweetWiz:login"))

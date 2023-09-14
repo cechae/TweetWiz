@@ -2,13 +2,14 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>Login</h2>
+<h1 class="title">Log In</h1>
 
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <input type="submit" value="Login">
+    
+    <input class="button is-link" type="submit" value="Login">
 </form>
-<a href="{% url 'TweetWiz:password_reset' %}">Reset password</a>
-<a href="{% url 'TweetWiz:register' %}">Register</a>
+{% comment %} <a href="{% url 'TweetWiz:password_reset' %}">Reset password</a> {% endcomment %}
+<a href="{% url 'TweetWiz:register' %}">Don't have an account? Sign Up</a>
 {% endblock %}

@@ -1,50 +1,60 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<div class="columns">
 
-<div class='column'>
-    <div>
+    
+    {% if not user.is_authenticated %}
+    <div class="column is-half is-offset-one-quarter">
+       
+        <h2 class="title is-2">
+            Welcome to TweetWiz!
+        </h2>
+        <h2 class="subtitle"> A social app that allows users to share tweets among their followers. 
+        </h2>
+        <h2 class="subtitle"> 
+        Please Log in
+        </h2>
+    </div> 
+    {% else %}
+    
+    <div class="column is-half is-offset-one-quarter">
         {% if user.is_authenticated %}
-            <a href="{% url 'TweetWiz:logout' %}">Logout</a>
-            {% comment %} <a href="{% url 'TweetWiz:password_change' %}">Change Password </a> {% endcomment %}
-        {% else %}
-            <a href="{% url 'TweetWiz:login' %}">Login</a>
+        <h3 class="title is-4"> 
+            <span>@{{ user.username }} </span>
+        </h3>
         {% endif %}
-    </div>
-</div>
-{% if not user.is_authenticated %}
-<div class="column">
-    <div class="box">
-        <span class="is-small has-text-grey-light">
-            Please Log in here
-        </span>
-    </div>
-</div>
-{% else %}
-<div class="column">
-    {% for tweet in tweets %}
-        <div class="box">
-            {{ tweet.body }}
-            <span class="is-small has-text-grey-light">
-                ({{ tweet.created_at }} by {{ tweet.user.username }}
-            </span>
+        <div class="block">
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button class="button is-success is-fullwidth is-medium mt-5"
+                        type="submit">Tweet
+                </button>
+            </form>
         </div>
-    {% endfor %}
-</div>
-<div class="block">
-    <div class="block">
-        <h2 class="title is-2">Add a Tweet</p>
+        {% for tweet in tweets %}
+            <div class="box">
+                {{ tweet.body }}
+                <span class="is-small has-text-grey-light">
+                    {{ tweet.created_at }} by {{ tweet.user.username }}
+                </span>
+            </div>
+        {% endfor %}
     </div>
+    {% endif %}
+
     <div class="block">
-        <form method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button class="button is-success is-fullwidth is-medium mt-5"
-                    type="submit">Tweet
-            </button>
-        </form>
+        <div>
+            {% if user.is_authenticated %}
+                <a href="{% url 'TweetWiz:logout' %}"><button class="button is-danger">Log Out</button></a>
+                {% comment %} <a href="{% url 'TweetWiz:password_change' %}">Change Password </a> {% endcomment %}
+            {% else %}
+                <a href="{% url 'TweetWiz:login' %}"><button class="button is-info">Log In</button></a>
+            {% endif %}
+        </div>
     </div>
 </div>
-{% endif %}
+
 
 {% endblock content %}
