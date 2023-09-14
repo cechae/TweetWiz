@@ -2,3 +2,4 @@ newenv/
 db.sqlite3
 migrations/
 __pycache__/
+secrets.env
