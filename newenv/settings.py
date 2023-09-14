@@ -84,7 +84,7 @@ WSGI_APPLICATION = "newenv.wsgi.app"
 if os.environ.get("VERCEL_ENV") == "production":
     
     DATABASES = {
-        "defulat": dj_database_url.config(
+        "default": dj_database_url.config(
             default=os.environ.get("PRODUCTION_DB_URL"),
             conn_max_age = 600
         )
