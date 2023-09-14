@@ -7,8 +7,8 @@ class TweetForm(forms.ModelForm):
     body = forms.CharField(required=True,
                            widget=forms.widgets.Textarea(
             attrs={
-                "placeholder": "Tweet something...",
-                "class": "textarea is-success is-medium",
+                "placeholder": "What's on your mind?",
+                "class": "textarea is-success is-normal",
             }
         ),
         label="",)
@@ -20,4 +20,6 @@ class TweetForm(forms.ModelForm):
 
 class CustomUserCreationForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
-        fields = UserCreationForm.Meta.fields + ("email",)
+        fields = UserCreationForm.Meta.fields
+    
+    
