@@ -27,7 +27,7 @@ EMAIL_PORT = 1025
 SECRET_KEY = "django-insecure-r7!o+s_ti9rc)a4^32b&0(c=4wk-fug-wmt9ye1qqn_+h0r#4g"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['.vercel.app', '127.0.0.1']
 
@@ -123,6 +123,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = "static/"
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
